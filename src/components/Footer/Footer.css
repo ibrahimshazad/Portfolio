@@ -1,0 +1,27 @@
+.footer {
+    background-color: #333; /* Dark background for better contrast */
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.footer-links img {
+    width: 24px;
+    margin-right: 8px;
+}
