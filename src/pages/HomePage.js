@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import Contact from '../components/Contact/Contact';
 import '../styles/HomePage.css';
 import profilePic from '../assets/me.png';
 
 function HomePage() {
     const [typedText, setTypedText] = useState('');
     const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+    const [visitCount, setVisitCount] = useState(0);
     
     const roles = useMemo(() => [
         "Software Engineer",
@@ -58,6 +60,22 @@ function HomePage() {
             cancelAnimationFrame(frameId);
         };
     }, [currentRoleIndex, roles]);
+
+    useEffect(() => {
+        // Track the visit
+        fetch('http://localhost:5000/api/analytics/visit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ page: 'home' })
+        }).catch(err => console.error('Error tracking visit:', err));
+
+        // Get visit count
+        fetch('http://localhost:5000/api/analytics/visits')
+            .then(res => res.json())
+            .then(data => setVisitCount(data.totalVisits))
+            .catch(err => console.error('Error fetching visits:', err));
+    }, []);
+
     return (
         <div className="home-container">
             <motion.section 
@@ -156,6 +174,15 @@ function HomePage() {
                     ))}
                 </div>
             </motion.section>
+            <Contact />
+            <motion.div 
+                className="visit-counter"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+            >
+                {visitCount} visitors so far
+            </motion.div>
         </div>
     );
 }

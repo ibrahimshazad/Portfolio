@@ -83,7 +83,6 @@ function About() {
                 <div className="education-card">
                     <h3>{education.university}</h3>
                     <p>{education.degree}</p>
-                    <p>Graduating: {education.graduation}</p>
                     <p>GPA: {education.gpa}</p>
                     <p className="honors">{education.honors}</p>
                 </div>
