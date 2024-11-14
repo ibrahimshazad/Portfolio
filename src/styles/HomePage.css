@@ -13,59 +13,126 @@ html, body {
 
 
 .home-container {
-    background-color: #5fbed7; /* Subdued turquoise */
-    color: black; /* Making text color black */
-    font-family: Arial, sans-serif;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
     min-height: 100vh;
+    background-color: #5fbed7;
+}
+
+.hero-section {
     display: flex;
-    width: 100vw;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    overflow-x: hidden;
-    box-sizing: border-box;
+    padding: 4rem 0;
+    gap: 2rem;
+    min-height: 80vh;
 }
 
-.home-header {
-    text-align: center;
-    margin-bottom: 20px;
+.hero-content {
+    flex: 1;
+    text-align: left;
 }
 
-.quote {
-    font-style: italic;
-    width: 80%; /* Adjust if necessary */
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+    font-weight: bold;
 }
 
-.content-container {
-    display: flex;
-    width: 100%; /* Full width to align children side by side */
-    justify-content: space-around; /* Aligns items on the main axis */
-    align-items: center; /* Aligns items on the cross axis */
+.typed-text {
+    font-size: 2rem;
+    height: 2.5rem;
+    color: #2c3e50;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    min-height: 40px;
 }
 
-.text-content {
-    width: 45%; /* Adjust based on content */
-    text-align: left; /* Ensures text alignment is maintained */
+.hero-description {
+    font-size: 1.2rem;
+    color: #34495e;
+    margin-bottom: 2rem;
+    line-height: 1.6;
 }
 
 .profile-pic {
-    width: 30%; /* Adjust size as needed */
-    height: auto; /* Maintains the aspect ratio */
-    margin-left: 5%; /* Space between text and image */
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px) {  
-    .content-container {
-        flex-direction: column;
+.skills-section {
+    padding: 4rem 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin: 2rem 0;
+}
+
+.skills-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #1a1a1a;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+}
+
+.skill-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.skill-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.skill-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+}
+
+.skill-list li {
+    margin: 0.5rem 0;
+    color: #2c3e50;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column-reverse;
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .hero-content {
         text-align: center;
     }
 
-    .text-content, .profile-pic {
-        width: 100%;
+    .hero-content h1 {
+        font-size: 2.5rem;
     }
 
     .profile-pic {
-        margin-top: 20px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
     }
 }
 
