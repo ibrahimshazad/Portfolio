@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar/NavBar';
 import Footer from './components/Footer/Footer';
+import { ThemeProvider } from './components/Theme/ThemeContext';
 import './styles/App.css';
 
 // Lazy load components
@@ -12,6 +13,7 @@ const Resume = lazy(() => import('./pages/Resume'));
 
 function App() {
     return (
+        <ThemeProvider>
         <Router>
             <div className="App">
                 <NavBar />
@@ -26,6 +28,7 @@ function App() {
                 <Footer />
             </div>
         </Router>
+        </ThemeProvider>
     );
 }
 

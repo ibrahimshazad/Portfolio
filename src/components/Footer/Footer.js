@@ -8,7 +8,6 @@ import { motion } from 'framer-motion';
 function Footer() {
     const [activeHover, setActiveHover] = useState(null);
     const email = "muhammad.siddiqui262@gmail.com";
-    const [theme, setTheme] = useState('light');
 
     const handleEmailClick = (e) => {
         e.preventDefault();
@@ -73,14 +72,6 @@ function Footer() {
                         )}
                     </div>
                 ))}
-            </div>
-            <div className="footer-settings">
-                <button 
-                    className="theme-toggle"
-                    onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                >
-                    <i className={`fas fa-${theme === 'light' ? 'moon' : 'sun'}`}></i>
-                </button>
             </div>
         </footer>
     );

@@ -1,3 +1,37 @@
+:root[data-theme="light"] {
+    --background: #ffffff;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --nav-bg: #ffffff;
+    --nav-text: #333333;
+    --toggle-bg: #f0f0f0;
+    --toggle-icon: #f39c12;
+}
+
+:root[data-theme="dark"] {
+    --background: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --nav-bg: #2d2d2d;
+    --nav-text: #ffffff;
+    --toggle-bg: #333333;
+    --toggle-icon: #f1c40f;
+}
+
+/* Apply these variables */
+body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.navbar {
+    background-color: var(--nav-bg);
+    color: var(--nav-text);
+}
+
+/* Add any other elements that should respond to theme changes */
+
 .App {
   text-align: center;
 }
