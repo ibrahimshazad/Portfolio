@@ -4,6 +4,7 @@ import NavBar from './components/NavBar/NavBar';
 import Footer from './components/Footer/Footer';
 import { ThemeProvider } from './components/Theme/ThemeContext';
 import './styles/App.css';
+import Meeting from './components/Meeting/Meeting';
 
 // Lazy load components
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -22,6 +23,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/projects" element={<Projects />} />
+                        <Route path="/meet" element={<Meeting />} />
                         <Route path="/resume" element={<Resume />} />
                     </Routes>
                 </Suspense>

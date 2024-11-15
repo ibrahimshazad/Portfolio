@@ -1,7 +1,17 @@
 :root[data-theme="light"] {
     --background: #ffffff;
+    --background-secondary: #f8f9fa;
+    --text: #333333;
     --text-primary: #333333;
     --text-secondary: #666666;
+    --primary: #5fbed7;
+    --primary-light: rgba(95, 190, 215, 0.1);
+    --primary-dark: #4a9eb3;
+    --border-color: #e5e7eb;
+    --success: #28a745;
+    --success-bg: #d4edda;
+    --error: #dc3545;
+    --error-bg: #f8d7da;
     --nav-bg: #ffffff;
     --nav-text: #333333;
     --toggle-bg: #f0f0f0;
@@ -10,8 +20,18 @@
 
 :root[data-theme="dark"] {
     --background: #1a1a1a;
+    --background-secondary: #2d2d2d;
+    --text: #ffffff;
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
+    --primary: #5fbed7;
+    --primary-light: rgba(95, 190, 215, 0.2);
+    --primary-dark: #4a9eb3;
+    --border-color: #404040;
+    --success: #28a745;
+    --success-bg: #051b0d;
+    --error: #dc3545;
+    --error-bg: #2c0b0e;
     --nav-bg: #2d2d2d;
     --nav-text: #ffffff;
     --toggle-bg: #333333;

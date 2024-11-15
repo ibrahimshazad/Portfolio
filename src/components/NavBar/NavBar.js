@@ -40,12 +40,14 @@ function NavBar() {
                     <li>
                         <NavLink to="/" end>Home</NavLink>
                     </li>
-                   
                     <li>
                         <NavLink to="/about">About</NavLink>
                     </li>
                     <li>
                         <NavLink to="/projects">Projects</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/meet">Meet</NavLink>
                     </li>
                     <li>
                         <NavLink to="/resume">Resume</NavLink>
