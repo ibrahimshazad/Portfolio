@@ -1,0 +1,29 @@
+.theme-toggle {
+  background: var(--toggle-bg);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--toggle-icon);
+}
+
+.sun-icon {
+  fill: var(--toggle-icon);
+}
+
+.moon-icon {
+  fill: var(--toggle-icon);
+} 

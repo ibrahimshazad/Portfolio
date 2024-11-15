@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import ThemeToggle from '../Theme/ThemeToggle';
 import './NavBar.css';
 
 function NavBar() {
@@ -10,18 +11,23 @@ function NavBar() {
         <nav className="navbar">
             <div className="nav-brand">
                 <NavLink to="/">MI</NavLink>
+                <div className="theme-toggle-wrapper">
+                    <ThemeToggle />
+                </div>
             </div>
             
-            <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
-                <motion.span 
-                    animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-                ></motion.span>
-                <motion.span 
-                    animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-                ></motion.span>
-                <motion.span 
-                    animate={isOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-                ></motion.span>
+            <div className="nav-controls">
+                <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
+                    <motion.span 
+                        animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                    ></motion.span>
+                    <motion.span 
+                        animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+                    ></motion.span>
+                    <motion.span 
+                        animate={isOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+                    ></motion.span>
+                </div>
             </div>
 
             <AnimatePresence>
@@ -39,6 +45,9 @@ function NavBar() {
                     </li>
                     <li>
                         <NavLink to="/projects">Projects</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/meet">Meet</NavLink>
                     </li>
                     <li>
                         <NavLink to="/resume">Resume</NavLink>

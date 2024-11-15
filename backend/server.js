@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const db = require('./db/init');
+const { oauth2Client, getAuthUrl, getTokens } = require('./config/googleAuth');
+const calendarService = require('./services/calendarService');
 
 const app = express();
 
@@ -76,6 +78,66 @@ app.get('/api/analytics/contacts', (req, res) => {
     } catch (error) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'Failed to get contact count' });
+    }
+});
+
+// Add Google OAuth routes
+app.get('/auth/google', (req, res) => {
+    const authUrl = getAuthUrl();
+    res.redirect(authUrl);
+});
+
+app.get('/auth/google/callback', async (req, res) => {
+    try {
+        const { code } = req.query;
+        const tokens = await getTokens(code);
+        
+        console.log('=== SAVE THESE TOKENS ===');
+        console.log('Access Token:', tokens.access_token);
+        console.log('Refresh Token:', tokens.refresh_token);
+        console.log('========================');
+        
+        res.send('Authentication successful! Check your server console for the tokens.');
+    } catch (error) {
+        console.error('Auth Error:', error);
+        res.status(500).send('Authentication failed');
+    }
+});
+
+// Get available slots
+app.get('/api/calendar/slots', async (req, res) => {
+    try {
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 14); // Get slots for next 14 days
+        
+        const slots = await calendarService.getAvailableSlots(startDate, endDate);
+        res.json({ slots });
+    } catch (error) {
+        console.error('Error fetching slots:', error);
+        res.status(500).json({ error: 'Failed to fetch available slots' });
+    }
+});
+
+// Schedule meeting
+app.post('/api/calendar/schedule', async (req, res) => {
+    try {
+        const meeting = await calendarService.createMeeting(req.body);
+        res.json({ success: true, meeting });
+    } catch (error) {
+        console.error('Error scheduling meeting:', error);
+        res.status(500).json({ error: 'Failed to schedule meeting' });
+    }
+});
+
+// Add meetings analytics endpoint
+app.get('/api/analytics/meetings', (req, res) => {
+    try {
+        const result = db.prepare('SELECT COUNT(*) as totalMeetings FROM meetings').get();
+        res.json({ totalMeetings: result.totalMeetings });
+    } catch (error) {
+        console.error('Error getting meeting count:', error);
+        res.status(500).json({ error: 'Failed to get meeting count' });
     }
 });
 
