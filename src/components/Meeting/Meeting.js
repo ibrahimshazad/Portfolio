@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -23,17 +23,13 @@ function Meeting() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [slotsForDay, setSlotsForDay] = useState([]);
     const maxTopicLength = 200;
-    const [isLoadingSlots, setIsLoadingSlots] = useState(true);
+    const [isLoadingSlots, setIsLoadingSlots] = useState(false);
 
     // Email validation regex
     //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    useEffect(() => {
-        fetchMeetingCount();
-        fetchAvailableSlots();
-    }, []);
-
-    const fetchMeetingCount = async () => {
+    // Move fetch functions before useEffect and wrap in useCallback
+    const fetchMeetingCount = useCallback(async () => {
         try {
             const response = await fetch(`${API_URL}/api/analytics/meetings`);
             const data = await response.json();
@@ -41,20 +37,18 @@ function Meeting() {
         } catch (error) {
             console.error('Error fetching meeting count:', error);
         }
-    };
+    }, []);
 
-    const fetchAvailableSlots = async () => {
+    const fetchAvailableSlots = useCallback(async () => {
         setIsLoadingSlots(true);
         try {
             const response = await fetch(`${API_URL}/api/calendar/slots`);
             const data = await response.json();
             if (data.slots) {
-                setAvailableSlots(data.slots.map(slot => new Date(slot)));
-                // Set initial slots for today
-                const todaySlots = data.slots.filter(slot => 
-                    new Date(slot).toDateString() === new Date().toDateString()
-                );
-                setSlotsForDay(todaySlots);
+                // Convert slots to Date objects
+                const formattedSlots = data.slots.map(slot => new Date(slot));
+                setAvailableSlots(formattedSlots);
+                return formattedSlots;
             }
         } catch (error) {
             console.error('Error fetching slots:', error);
@@ -62,7 +56,28 @@ function Meeting() {
         } finally {
             setIsLoadingSlots(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        const initializeSlots = async () => {
+            await fetchMeetingCount();
+            const slots = await fetchAvailableSlots();
+            
+            if (slots) {
+                // Set initial slots for today
+                const today = new Date();
+                const todaySlots = slots.filter(slot => {
+                    const slotDate = new Date(slot);
+                    return slotDate.getFullYear() === today.getFullYear() &&
+                           slotDate.getMonth() === today.getMonth() &&
+                           slotDate.getDate() === today.getDate();
+                });
+                setSlotsForDay(todaySlots);
+            }
+        };
+
+        initializeSlots();
+    }, [fetchMeetingCount, fetchAvailableSlots]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -143,18 +158,21 @@ function Meeting() {
         }
     };
 
-    const handleDateChange = (date) => {
+    const handleDateChange = useCallback((date) => {
         setSelectedDate(date);
-        // Filter slots for the selected date
-        const newSlots = availableSlots.filter(slot => 
-            slot.toDateString() === date.toDateString()
-        );
+        
+        const newSlots = availableSlots.filter(slot => {
+            const slotDateTime = DateTime.fromJSDate(slot);
+            const selectedDateTime = DateTime.fromJSDate(date);
+            return slotDateTime.hasSame(selectedDateTime, 'day');
+        });
+        
         setSlotsForDay(newSlots);
         setFormData(prev => ({
             ...prev,
-            date: date.toISOString().split('T')[0]
+            date: DateTime.fromJSDate(date).toISODate()
         }));
-    };
+    }, [availableSlots]);
 
     const TimeSlots = () => {
         if (isLoadingSlots) {
@@ -173,32 +191,21 @@ function Meeting() {
         return (
             <div className="time-slots-grid">
                 {slotsForDay.map((slot, index) => {
-                    // Convert the ISO string to a formatted time in Chicago timezone
-                    const slotTime = DateTime
-                        .fromISO(slot)
-                        .setZone('America/Chicago')
-                        .toLocaleString(DateTime.TIME_SIMPLE);
+                    const dateTime = DateTime.fromJSDate(slot).setZone('America/Chicago');
+                    const slotTime = dateTime.toLocaleString(DateTime.TIME_SIMPLE);
 
                     return (
                         <button
                             key={index}
                             type="button"
                             onClick={() => {
-                                const time = DateTime
-                                    .fromISO(slot)
-                                    .setZone('America/Chicago')
-                                    .toFormat('HH:mm');
-                                    
                                 setFormData(prev => ({
                                     ...prev,
-                                    time
+                                    time: dateTime.toFormat('HH:mm')
                                 }));
                             }}
                             className={`time-slot ${
-                                formData.time === DateTime
-                                    .fromISO(slot)
-                                    .setZone('America/Chicago')
-                                    .toFormat('HH:mm')
+                                formData.time === dateTime.toFormat('HH:mm')
                                     ? 'selected'
                                     : ''
                             }`}
@@ -209,6 +216,22 @@ function Meeting() {
                 })}
             </div>
         );
+    };
+
+    const tileDisabled = ({ date }) => {
+        // Convert slots to Date objects if they aren't already
+        return !availableSlots.some(slot => {
+            const slotDate = new Date(slot);
+            return slotDate.toDateString() === date.toDateString();
+        });
+    };
+
+    const tileClassName = ({ date }) => {
+        const hasSlots = availableSlots.some(slot => {
+            const slotDate = new Date(slot);
+            return slotDate.toDateString() === date.toDateString();
+        });
+        return hasSlots ? 'has-slots' : '';
     };
 
     return (
@@ -230,15 +253,10 @@ function Meeting() {
                 <Calendar
                     onChange={handleDateChange}
                     value={selectedDate}
+                    tileDisabled={tileDisabled}
+                    tileClassName={tileClassName}
                     minDate={new Date()}
                     maxDate={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)} // 30 days from now
-                    tileDisabled={({ date }) => {
-                        return date.getDay() === 0 || 
-                               date.getDay() === 6 || 
-                               !availableSlots.some(slot => 
-                                   slot.toDateString() === date.toDateString()
-                               );
-                    }}
                     className="meeting-calendar"
                 />
 
