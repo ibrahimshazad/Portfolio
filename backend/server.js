@@ -7,7 +7,13 @@ const calendarService = require('./services/calendarService');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://lovely-fudge-d03159.netlify.app',
+    'http://localhost:3000'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // Rate limiting configuration
