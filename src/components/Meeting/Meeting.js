@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Meeting.css';
+import { DateTime } from 'luxon';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -172,22 +173,32 @@ function Meeting() {
         return (
             <div className="time-slots-grid">
                 {slotsForDay.map((slot, index) => {
-                    const slotTime = new Date(slot).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
+                    // Convert the ISO string to a formatted time in Chicago timezone
+                    const slotTime = DateTime
+                        .fromISO(slot)
+                        .setZone('America/Chicago')
+                        .toLocaleString(DateTime.TIME_SIMPLE);
+
                     return (
                         <button
                             key={index}
                             type="button"
                             onClick={() => {
+                                const time = DateTime
+                                    .fromISO(slot)
+                                    .setZone('America/Chicago')
+                                    .toFormat('HH:mm');
+                                    
                                 setFormData(prev => ({
                                     ...prev,
-                                    time: new Date(slot).toTimeString().slice(0, 5)
+                                    time
                                 }));
                             }}
                             className={`time-slot ${
-                                formData.time === new Date(slot).toTimeString().slice(0, 5)
+                                formData.time === DateTime
+                                    .fromISO(slot)
+                                    .setZone('America/Chicago')
+                                    .toFormat('HH:mm')
                                     ? 'selected'
                                     : ''
                             }`}

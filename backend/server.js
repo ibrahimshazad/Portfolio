@@ -7,12 +7,59 @@ const calendarService = require('./services/calendarService');
 
 const app = express();
 
+// Add logging middleware to debug CORS issues
+app.use((req, res, next) => {
+    console.log('Incoming request:', {
+        origin: req.headers.origin,
+        method: req.method,
+        path: req.path
+    });
+    next();
+});
+
+// Enhanced CORS configuration
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : ['http://localhost:3000'];
+
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [
-    'http://localhost:3000'
-  ],
-  credentials: true
+    origin: function (origin, callback) {
+        console.log('Request origin:', origin);
+        console.log('Allowed origins:', allowedOrigins);
+
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) {
+            return callback(null, true);
+        }
+
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = `CORS policy does not allow access from the specified origin: ${origin}`;
+            console.log(msg);
+            return callback(new Error(msg), false);
+        }
+
+        return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 }));
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    if (err.message.includes('CORS')) {
+        return res.status(403).json({
+            error: 'CORS Error',
+            message: err.message,
+            origin: req.headers.origin,
+            allowedOrigins
+        });
+    }
+    next(err);
+});
+
 app.use(express.json());
 
 // Rate limiting configuration

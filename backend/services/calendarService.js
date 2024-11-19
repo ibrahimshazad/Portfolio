@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 const { oauth2Client } = require('../config/googleAuth');
+const { DateTime } = require('luxon');
 
 class CalendarService {
     constructor() {
@@ -9,6 +10,7 @@ class CalendarService {
         });
 
         this.calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+        this.timeZone = 'America/Chicago';
     }
 
     async getAvailableSlots(startDate, endDate) {
@@ -68,48 +70,56 @@ class CalendarService {
     }
 
     generateAvailableSlots(startDate, endDate, busySlots) {
-        // Define your working hours
         const workingHours = {
-            start: 9, // 9 AM
-            end: 17   // 5 PM
+            start: 9,
+            end: 17
         };
 
         const slots = [];
-        const currentDate = new Date(startDate);
-        const interval = 30; // 30-minute slots
+        let currentDate = DateTime.fromJSDate(startDate)
+            .setZone(this.timeZone)
+            .startOf('day');
+        const endDateTime = DateTime.fromJSDate(endDate)
+            .setZone(this.timeZone);
+        const interval = 30;
 
-        while (currentDate <= endDate) {
-            if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) { // Skip weekends
+        while (currentDate <= endDateTime) {
+            if (currentDate.weekday !== 6 && currentDate.weekday !== 7) {
                 for (let hour = workingHours.start; hour < workingHours.end; hour++) {
                     for (let minute = 0; minute < 60; minute += interval) {
-                        const slotStart = new Date(currentDate);
-                        slotStart.setHours(hour, minute, 0, 0);
-
-                        const slotEnd = new Date(slotStart);
-                        slotEnd.setMinutes(slotStart.getMinutes() + interval);
+                        const slotStart = currentDate.set({
+                            hour,
+                            minute,
+                            second: 0,
+                            millisecond: 0
+                        });
+                        
+                        const slotEnd = slotStart.plus({ minutes: interval });
 
                         // Check if slot overlaps with any busy time
                         const isAvailable = !busySlots.some(busy => {
-                            const busyStart = new Date(busy.start);
-                            const busyEnd = new Date(busy.end);
+                            const busyStart = DateTime.fromISO(busy.start).setZone(this.timeZone);
+                            const busyEnd = DateTime.fromISO(busy.end).setZone(this.timeZone);
                             return slotStart < busyEnd && slotEnd > busyStart;
                         });
 
-                        if (isAvailable && slotStart > new Date()) {
-                            slots.push(slotStart.toISOString());
+                        if (isAvailable && slotStart > DateTime.now().setZone(this.timeZone)) {
+                            slots.push(slotStart.toISO());
                         }
                     }
                 }
             }
-            currentDate.setDate(currentDate.getDate() + 1);
+            currentDate = currentDate.plus({ days: 1 });
         }
 
         return slots;
     }
 
     calculateEndTime(date, time, duration) {
-        const startDateTime = new Date(date + 'T' + time);
-        return new Date(startDateTime.getTime() + duration * 60000);
+        const startDateTime = DateTime.fromFormat(`${date}T${time}`, "yyyy-MM-dd'T'HH:mm", {
+            zone: this.timeZone
+        });
+        return startDateTime.plus({ minutes: duration }).toISO();
     }
 }
 
