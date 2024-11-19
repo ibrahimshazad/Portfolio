@@ -8,9 +8,7 @@ const calendarService = require('./services/calendarService');
 const app = express();
 
 app.use(cors({
-  origin: [
-    'https://lovely-fudge-d03159.netlify.app',
-    'https://your-render-app.onrender.com',
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [
     'http://localhost:3000'
   ],
   credentials: true
