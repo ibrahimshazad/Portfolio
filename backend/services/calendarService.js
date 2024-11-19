@@ -15,6 +15,7 @@ class CalendarService {
 
     async getAvailableSlots(startDate, endDate) {
         try {
+
             const response = await this.calendar.freebusy.query({
                 requestBody: {
                     timeMin: startDate.toISOString(),
@@ -22,6 +23,7 @@ class CalendarService {
                     items: [{ id: 'primary' }]
                 }
             });
+
 
             const busySlots = response.data.calendars.primary.busy;
             return this.generateAvailableSlots(startDate, endDate, busySlots);
@@ -70,6 +72,7 @@ class CalendarService {
     }
 
     generateAvailableSlots(startDate, endDate, busySlots) {
+      
         const workingHours = {
             start: 9,
             end: 17
