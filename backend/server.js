@@ -9,11 +9,6 @@ const app = express();
 
 // Add logging middleware to debug CORS issues
 app.use((req, res, next) => {
-    console.log('Incoming request:', {
-        origin: req.headers.origin,
-        method: req.method,
-        path: req.path
-    });
     next();
 });
 
@@ -24,8 +19,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({
     origin: function (origin, callback) {
-        console.log('Request origin:', origin);
-        console.log('Allowed origins:', allowedOrigins);
+
 
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) {
@@ -34,7 +28,6 @@ app.use(cors({
 
         if (allowedOrigins.indexOf(origin) === -1) {
             const msg = `CORS policy does not allow access from the specified origin: ${origin}`;
-            console.log(msg);
             return callback(new Error(msg), false);
         }
 
@@ -158,10 +151,6 @@ app.get('/auth/google/callback', async (req, res) => {
         const { code } = req.query;
         const tokens = await getTokens(code);
         
-        console.log('=== SAVE THESE TOKENS ===');
-        console.log('Access Token:', tokens.access_token);
-        console.log('Refresh Token:', tokens.refresh_token);
-        console.log('========================');
         
         res.send('Authentication successful! Check your server console for the tokens.');
     } catch (error) {

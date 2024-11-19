@@ -21,7 +21,6 @@ const getAuthUrl = () => {
         include_granted_scopes: true
     });
     
-    console.log('Generated auth URL:', url);  // Log the generated URL
     return url;
 };
 
