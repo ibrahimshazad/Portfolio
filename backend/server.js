@@ -10,6 +10,7 @@ const app = express();
 app.use(cors({
   origin: [
     'https://lovely-fudge-d03159.netlify.app',
+    'https://your-render-app.onrender.com',
     'http://localhost:3000'
   ],
   credentials: true
@@ -27,27 +28,41 @@ const contactLimiter = rateLimit({
 
 // Track page visit
 app.post('/api/analytics/visit', (req, res) => {
-    const stmt = db.prepare('INSERT INTO visits (page) VALUES (?)');
-    const result = stmt.run(req.body.page);
-    res.json({ success: true, id: result.lastInsertRowid });
+    db.run('INSERT INTO visits (page) VALUES (?)', [req.body.page], function(err) {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Failed to track visit' });
+        }
+        res.json({ success: true, id: this.lastID });
+    });
 });
 
 // Get visit statistics
 app.get('/api/analytics/visits', (req, res) => {
-    const visits = db.prepare(`
+    db.all(`
         SELECT date(timestamp) as date, COUNT(*) as count 
         FROM visits 
         GROUP BY date(timestamp)
         ORDER BY date DESC 
         LIMIT 30
-    `).all();
-    
-    const totalVisits = db.prepare('SELECT COUNT(*) as count FROM visits').get();
-
-    res.json({
-        totalVisits: totalVisits.count,
-        dates: visits.map(v => v.date),
-        counts: visits.map(v => v.count)
+    `, [], (err, visits) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Failed to get visits' });
+        }
+        
+        db.get('SELECT COUNT(*) as count FROM visits', [], (err, totalVisits) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ error: 'Failed to get total visits' });
+            }
+            
+            res.json({
+                totalVisits: totalVisits.count,
+                dates: visits.map(v => v.date),
+                counts: visits.map(v => v.count)
+            });
+        });
     });
 });
 
