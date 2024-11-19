@@ -4,6 +4,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Meeting.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function Meeting() {
     const [meetingCount, setMeetingCount] = useState(0);
     const [formData, setFormData] = useState({
@@ -23,7 +25,7 @@ function Meeting() {
     const [isLoadingSlots, setIsLoadingSlots] = useState(true);
 
     // Email validation regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     useEffect(() => {
         fetchMeetingCount();
@@ -32,7 +34,7 @@ function Meeting() {
 
     const fetchMeetingCount = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/analytics/meetings');
+            const response = await fetch(`${API_URL}/api/analytics/meetings`);
             const data = await response.json();
             setMeetingCount(data.totalMeetings);
         } catch (error) {
@@ -43,7 +45,7 @@ function Meeting() {
     const fetchAvailableSlots = async () => {
         setIsLoadingSlots(true);
         try {
-            const response = await fetch('http://localhost:5000/api/calendar/slots');
+            const response = await fetch(`${API_URL}/api/calendar/slots`);
             const data = await response.json();
             if (data.slots) {
                 setAvailableSlots(data.slots.map(slot => new Date(slot)));
@@ -107,7 +109,7 @@ function Meeting() {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/api/calendar/schedule', {
+            const response = await fetch(`${API_URL}/api/calendar/schedule`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

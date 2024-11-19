@@ -1,10 +1,6 @@
 const { google } = require('googleapis');
 require('dotenv').config();
 
-// Add debugging logs
-console.log('Environment check:');
-console.log('Client ID:', process.env.GOOGLE_CLIENT_ID?.substring(0, 10) + '...');  // Show first 10 chars for verification
-console.log('Client Secret exists:', !!process.env.GOOGLE_CLIENT_SECRET);
 
 const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,

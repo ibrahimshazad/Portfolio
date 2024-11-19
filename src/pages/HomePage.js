@@ -62,15 +62,17 @@ function HomePage() {
     }, [currentRoleIndex, roles]);
 
     useEffect(() => {
+        const API_URL = process.env.REACT_APP_API_URL;
+
         // Track the visit
-        fetch('http://localhost:5000/api/analytics/visit', {
+        fetch(`${API_URL}/api/analytics/visit`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ page: 'home' })
         }).catch(err => console.error('Error tracking visit:', err));
 
         // Get visit count
-        fetch('http://localhost:5000/api/analytics/visits')
+        fetch(`${API_URL}/api/analytics/visits`)
             .then(res => res.json())
             .then(data => setVisitCount(data.totalVisits))
             .catch(err => console.error('Error fetching visits:', err));
