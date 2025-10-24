@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
@@ -7,15 +8,23 @@ const calendarService = require('./services/calendarService');
 
 const app = express();
 
-// Add logging middleware to debug CORS issues
-app.use((req, res, next) => {
-    next();
-});
-
 // Enhanced CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
     ? process.env.ALLOWED_ORIGINS.split(',')
     : ['http://localhost:3000'];
+
+console.log('Allowed Origins:', allowedOrigins);
+
+app.get('/auth/google/callback', async (req, res) => {
+    const { code } = req.query;
+    try {
+        const { tokens } = await oauth2Client.getToken(code);
+        res.send('Authentication successful! Check your terminal/console for the refresh token.');
+    } catch (error) {
+        console.error('Error getting tokens:', error);
+        res.status(500).send('Error getting tokens');
+    }
+});
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -150,11 +159,9 @@ app.get('/auth/google/callback', async (req, res) => {
     try {
         const { code } = req.query;
         const tokens = await getTokens(code);
-        
-        
-        res.send('Authentication successful! Check your server console for the tokens.');
+        res.send('Authentication successful!');
     } catch (error) {
-        console.error('Auth Error:', error);
+        console.error('Error:', error);
         res.status(500).send('Authentication failed');
     }
 });
@@ -196,5 +203,5 @@ app.get('/api/analytics/meetings', (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

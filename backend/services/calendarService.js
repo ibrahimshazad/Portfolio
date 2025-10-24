@@ -15,20 +15,46 @@ class CalendarService {
 
     async getAvailableSlots(startDate, endDate) {
         try {
+            // Verify auth is working
+            if (!oauth2Client.credentials || !oauth2Client.credentials.refresh_token) {
+                throw new Error('Google Calendar not authenticated. Missing credentials.');
+            }
+
+            // Ensure we're working with valid dates
+            startDate = new Date(startDate);
+            endDate = new Date(endDate);
+
+            // Validate date range
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                throw new Error('Invalid date range provided');
+            }
 
             const response = await this.calendar.freebusy.query({
                 requestBody: {
                     timeMin: startDate.toISOString(),
                     timeMax: endDate.toISOString(),
-                    items: [{ id: 'primary' }]
+                    items: [{ id: 'primary' }],
+                    timeZone: this.timeZone
                 }
             });
 
+            if (!response.data || !response.data.calendars || !response.data.calendars.primary) {
+                throw new Error('Invalid response from Google Calendar API');
+            }
 
-            const busySlots = response.data.calendars.primary.busy;
-            return this.generateAvailableSlots(startDate, endDate, busySlots);
+            const busySlots = response.data.calendars.primary.busy || [];
+            
+            
+            const availableSlots = this.generateAvailableSlots(startDate, endDate, busySlots);
+           
+            return availableSlots;
         } catch (error) {
             console.error('Error fetching calendar slots:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                response: error.response?.data
+            });
             throw error;
         }
     }
@@ -72,12 +98,13 @@ class CalendarService {
     }
 
     generateAvailableSlots(startDate, endDate, busySlots) {
-      
+        // Set working hours (9 AM to 5 PM)
         const workingHours = {
             start: 9,
             end: 17
         };
 
+    
         const slots = [];
         let currentDate = DateTime.fromJSDate(startDate)
             .setZone(this.timeZone)

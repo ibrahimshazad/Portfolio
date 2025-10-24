@@ -9,3 +9,9 @@ services:
         sync: false
       - key: GOOGLE_CLIENT_SECRET
         sync: false
+      - key: GOOGLE_REFRESH_TOKEN
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: "https://lovely-fudge-d03159.netlify.app"
+      - key: GOOGLE_CALLBACK_URL
+        value: "https://portfolio-backend-2zi9.onrender.com/auth/google/callback"
