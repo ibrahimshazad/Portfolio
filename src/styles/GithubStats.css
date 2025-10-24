@@ -1,0 +1,198 @@
+.github-stats-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: #1a1b27;  /* Tokyo Night theme background */
+}
+
+.github-stats-title {
+    font-size: 2.5rem;
+    color: #a9b1d6;  /* Tokyo Night theme text color */
+    margin-bottom: 3rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background: #ffffff;  /* GitHub theme card background */
+    border: 1px solid #e1e4e8;  /* GitHub border color */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.contribution-graph {
+    grid-column: 1 / -1;
+    padding: 2rem;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #000000;
+    gap: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.current-activity {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    padding: 1rem;
+}
+
+.current-activity img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.years-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1400px;
+    padding: 2rem;
+}
+
+.year-card {
+    background: #0d1117;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.year-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.year-card h3 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.year-image {
+    width: 100%;
+    height: auto;
+    max-width: 1200px;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    margin: 0 auto;
+    display: block;
+}
+
+.github-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.github-link {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #24292e;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    margin: 0 auto;
+}
+
+.github-link:hover {
+    background-color: #2f363d;
+}
+
+.yearly-summary {
+    margin-top: 2rem;
+    max-width: 100%;
+    height: auto;
+}
+
+.contribution-graph iframe {
+    margin-top: 1rem;
+    background-color: transparent;
+}
+
+.year-title {
+    color: #a9b1d6;  /* Tokyo Night text color */
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #2f3549;
+    padding-bottom: 0.5rem;
+}
+
+.github-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.github-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #7aa2f7;  /* Tokyo Night accent color */
+    color: #1a1b27;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.github-link:hover {
+    background-color: #1a1f24;
+}
+
+@media (max-width: 768px) {
+    .github-stats-title {
+        font-size: 2rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 0.5rem;
+    }
+}

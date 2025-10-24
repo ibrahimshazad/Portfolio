@@ -4,8 +4,9 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Meeting.css';
 import { DateTime } from 'luxon';
+import { config } from '../../config';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = config.apiUrl;
 
 function Meeting() {
     const [meetingCount, setMeetingCount] = useState(0);
@@ -42,11 +43,18 @@ function Meeting() {
     const fetchAvailableSlots = useCallback(async () => {
         setIsLoadingSlots(true);
         try {
+        
             const response = await fetch(`${API_URL}/api/calendar/slots`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-            if (data.slots) {
+           
+            
+            if (data.slots && Array.isArray(data.slots)) {
                 // Convert slots to Date objects
                 const formattedSlots = data.slots.map(slot => new Date(slot));
+            
                 setAvailableSlots(formattedSlots);
                 return formattedSlots;
             }

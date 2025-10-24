@@ -52,6 +52,13 @@
     margin-bottom: 1rem;
 }
 
+.experience-card p {
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
 .honors {
     color: #2c3e50;
     font-style: italic;

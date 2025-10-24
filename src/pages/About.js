@@ -5,9 +5,15 @@ import '../styles/About.css';
 function About() {
     const experiences = [
         {
+            title: "Software Engineer II",
+            company: "Ikon Technologies - Arlington, TX",
+            period: "February 2025 - Present",
+            description: "I design and build large-scale backend systems and data pipelines using TypeScript, NestJS, GraphQL, and AWS to power revenue-generating products and integrations. I also lead technical initiatives, mentor engineers, and collaborate with executives to drive platform-wide innovation and efficiency."
+        },
+        {
             title: "Software Development Engineer I",
             company: "Ikon Technologies - Arlington, TX",
-            period: "June 2022 - Present",
+            period: "June 2022 - February 2025",
             description: "Led the migration to AWS Cognito, enhancing security with OAuth flow and SSO. Designed and deployed highly scalable GraphQL APIs with Apollo GraphQL on AWS Fargate. Enhanced monitoring capabilities by integrating SNS, CloudWatch, and Kinesis."
         },
         {
@@ -70,7 +76,7 @@ function About() {
                 transition={{ duration: 0.6 }}
             >
                 <h2>Professional Summary</h2>
-                <p>Innovative Software Developer Engineer with over 3 years of professional experience in cloud solutions and software architecture. Skilled in designing and implementing scalable, cloud-native applications, with a proven track record of delivering high-quality software that enhances business operations and efficiency.</p>
+                <p>Innovative Software Engineer II with over 3.5 years of professional experience in cloud solutions and software architecture. Expert in designing and implementing large-scale backend systems and data pipelines using TypeScript, NestJS, GraphQL, and AWS. Proven track record of leading technical initiatives, mentoring engineers, and driving platform-wide innovation while delivering high-quality software that enhances business operations and efficiency.</p>
             </motion.section>
 
             <motion.section 
