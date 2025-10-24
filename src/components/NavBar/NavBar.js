@@ -52,6 +52,9 @@ function NavBar() {
                     <li>
                         <NavLink to="/resume">Resume</NavLink>
                     </li>
+                    <li>
+                        <NavLink to="/github-stats">GitHub Stats</NavLink>
+                    </li>
                 </motion.ul>
             </AnimatePresence>
         </nav>

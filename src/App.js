@@ -11,6 +11,7 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const About = lazy(() => import('./pages/About'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Resume = lazy(() => import('./pages/Resume'));
+const GithubStats = lazy(() => import('./pages/GithubStats'));
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                         <Route path="/projects" element={<Projects />} />
                         <Route path="/meet" element={<Meeting />} />
                         <Route path="/resume" element={<Resume />} />
+                        <Route path="/github-stats" element={<GithubStats />} />
                     </Routes>
                 </Suspense>
                 <Footer />
